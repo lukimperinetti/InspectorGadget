@@ -1,16 +1,17 @@
-# This is a sample Python script.
+import requests
+from bs4 import BeautifulSoup as bs  # create alias for BeautifulSoup
 
-# Press Maj+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+github_user = input('Input GitHub User: ')
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+while True:
+    url = 'https://github.com/' + github_user
+    r = requests.get(url)
+    if r.status_code == 200:
+        soup = bs(r.content, 'html.parser')  # get content from URL html code
+        profile_image = soup.find('img', {'class': 'avatar avatar-user width-full border color-bg-default'})[
+            'src']  # ['src'] get the src attribute
+        print('Success: '+profile_image)
+        break
+    else:
+        print('User Not found or bad spelling -- Try again ? ')
+        github_user = input('Input GitHub User: ')
